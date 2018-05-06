@@ -1,4 +1,4 @@
-# Ccca2frontend
+# COMP90024_Assignment2
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.7.4.
 
