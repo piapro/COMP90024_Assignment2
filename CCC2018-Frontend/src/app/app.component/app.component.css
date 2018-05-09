@@ -1,0 +1,47 @@
+/**
+@author Xinda Yu
+ */
+/**
+  container of the map canvas
+ */
+.map_container {
+  position: absolute;
+  background-repeat: no-repeat;
+  width: 94%;
+  height: 70%;
+  display: block;
+  margin: 2%;
+  border-radius: 50px;
+  z-index: 1000;
+}
+/**
+The control panel below the map
+ */
+.panel {
+  /*position: absolute;*/
+  /*width: 100%;*/
+  display:block;
+  /*margin: 2%;*/
+  padding: 2%;
+}
+/**
+The map itself
+ */
+agm-map {
+  height: 80%;
+  width: 100%;
+}
+/**
+The zoomin, zoom out and reset buttons of the map
+ */
+.mapctrl{
+  float:right;
+}
+/**
+Container of chart.
+ */
+.chartbox{
+  display: block;
+  width: 160px;
+  height: 160px;
+}

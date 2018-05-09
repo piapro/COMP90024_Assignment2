@@ -1,0 +1,105 @@
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="http://unimelb.edu.au">
+        <img alt="Brand" src="assets/logo.jpg" style="position:absolute; left: 0; top: 0; height: 50px">
+      </a>
+    </div>
+    <p class="navbar-text navbar-right" (click)="openDialog()">
+      <a href="#" class="navbar-link">Group 51</a>&nbsp;&nbsp;&nbsp;&nbsp;
+    </p>
+    <p class="navbar-text">&nbsp;&nbsp;&nbsp;&nbsp;<b>COMP90024 Cluster and Cloud Computing</b> Assignment 2</p>
+  </div>
+</nav>
+
+<div class="map_container">
+  <h1>Twitter content and location based analytics</h1>
+  <agm-map
+    [latitude]="lat" [longitude]="lng" [zoom]="zoom"
+    [disableDefaultUI]="false"
+    [zoomControl]="false"
+    (mapClick)="mapClicked($event)">
+    <div *ngFor="let m of markers; let i = index">
+
+      <agm-marker
+        *ngIf="m.type == 'city' || (zoom >= 6 && m.city == selectedCity)"
+        (markerClick)="markerClicked(m.name, i)"
+        [latitude]="m.lat" [longitude]="m.lng"
+        [zIndex]="m.zIndex">
+        <agm-snazzy-info-window
+          [latitude]="m.lat" [longitude]="m.lng"
+          [closeWhenOthersOpen]="true"
+          [closeOnMapClick]="true"
+          [borderRadius]="'10px'"
+          [maxHeight]="800"
+          [maxWidth]="1000">
+          <ng-template>
+            <div><strong>{{m.name}}</strong></div>
+            <div *ngIf="displayTwtSentiment" class="chartbox">
+              <canvas baseChart width="1" height="1"
+                      [data]="[m.positive,m.negative,m.neutral]"
+                      [labels]="twtLabels"
+                      [legend]="false"
+                      [chartType]="'pie'"></canvas>
+            </div>
+            <div *ngIf=" displayAge && m.type == 'city'" class="chartbox">
+              <canvas baseChart width="1" height="1"
+                      [datasets]="m.ageBarData"
+                      [labels]="ageLabels"
+                      [legend]="false"
+                      [chartType]="'bar'"></canvas>
+            </div>
+            <div *ngIf="displayGameRelated" class="chartbox">
+              <canvas baseChart width="1" height="1"
+                      [data]="m.gameData"
+                      [labels]="gameLabels"
+                      [legend]="false"
+                      [chartType]="'doughnut'"></canvas>
+            </div>
+            <div *ngIf=" displayIncome && m.type == 'city'" class="chartbox">
+              <canvas baseChart width="1" height="1"
+                      [data]="m.incomePieData"
+                      [labels]="incomeLabels"
+                      [legend]="false"
+                      [chartType]="'pie'"></canvas>
+            </div>
+          </ng-template>
+        </agm-snazzy-info-window>
+        <agm-polygon
+          [visible]="m.selected"
+          [paths]="m.paths"
+          [strokeOpacity]="0.5"
+          [strokeColor]="'white'"
+          [fillColor]="'hsl('+ (m.positive/(m.positive+m.negative+m.neutral) * 100) + ', 100%, 50%)'"
+          [fillOpacity]="0.5">
+        </agm-polygon>
+      </agm-marker>
+    </div>
+  </agm-map>
+
+  <div class="panel">
+    <p><strong>Instructions:</strong> First load the data and check out what kind of data you want. Then click on any
+      markers on the map to see the trend!</p>
+    <p>
+      <span class="scenarioctrl">
+      <button mat-raised-button (click)="reloadData(0)">Load Data</button>
+      </span>
+      <span class="mapctrl">
+      <button mat-raised-button (click)="zoomout()">-</button>
+      <button mat-raised-button (click)="resetMap()">Reset Map</button>
+      <button mat-raised-button (click)="zoomin()">+</button>
+    </span>
+
+    </p>
+
+    <div class="scenarioctrl">
+      <mat-checkbox [(ngModel)]="displayTwtSentiment">Display Twitter Sentiment</mat-checkbox>
+      <mat-checkbox [(ngModel)]="displayAge">Display Age Information on Map</mat-checkbox>
+      <mat-checkbox [(ngModel)]="displayGameRelated">Display Game Related Info</mat-checkbox>
+      <mat-checkbox [(ngModel)]="displayIncome">Display Income Info</mat-checkbox>
+    </div>
+  </div>
+
+</div>
+
+
