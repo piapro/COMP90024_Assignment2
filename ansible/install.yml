@@ -1,0 +1,54 @@
+#Created by Xinda Yu from COMP90024 CCC Project 2 Team 51
+---
+- hosts: webhosts
+  vars:
+    http_port: 8080
+    db_address: 115.146.86.141
+    db_port: 5985
+    git_repo: https://github.com/piapro/COMP90024_Assignment2.git
+    git_frontend_path: ~/COMP90024_Assignment2/CCC2018-Frontend/ccc2frontend.war
+    git_streamer_path: ~/COMP90024_Assignment2/CCC2018-Harvester/stream_tweets.py
+    git_crawler_path: ~/COMP90024_Assignment2/CCC2018-Harvester/search_tweets.py
+    tomcat_tar: "http://apache.melbourneitmirror.net/tomcat/tomcat-8/v8.5.31/bin/apache-tomcat-8.5.31.tar.gz"
+    tomcat_fname: apache-tomcat-8.5.31.tar.gz
+    tomcat_home: /opt/tomcat
+    tomcat_bin: /opt/tomcat/bin
+    tomcat_webapps: /opt/tomcat/webapps
+    catalina_home: /opt/tomcat
+  #remote username
+  remote_user: ubuntu
+  tasks:
+  - name: install jdk, python, CouchDB, git, and other packages
+    apt: name={{ item }} state=present update_cache=yes
+    with_items:
+      - default-jdk
+      - git
+      - couchdb
+      - python
+    become: yes
+
+  - name: clone src code and deploy file from git
+    command: git clone {{ git_repo }}
+
+  - name: download and install tomcat
+    command: wget {{ tomcat_tar }}
+
+  - name: Prepare the directory of tomcat.
+    command: sudo mkdir {{ tomcat_home }}
+
+  - name: untar tomcat tarball
+    command: sudo tar xzvf {{ tomcat_fname }} -C {{ tomcat_home }} --strip-components=1
+
+  - command: sudo chgrp -R ubuntu {{ tomcat_home }}/webapps {{ tomcat_home }}/work {{ tomcat_home }}/temp {{ tomcat_home }}/logs {{ tomcat_bin }}
+
+  - name: deploy the frontend app
+    command: sudo cp {{ git_frontend_path }} {{ tomcat_webapps }}/
+
+  - name: start the server
+    command: sudo sh {{ tomcat_bin }}/startup.sh
+
+  # - name: start the crawler on the instance
+  #   command: python {{ git_streamer_path }}
+
+  # - name: start the crawler on the instance
+  #   command: python {{ git_crawler_path }}
