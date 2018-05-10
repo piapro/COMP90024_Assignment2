@@ -1,10 +1,10 @@
 # COMP90024_Assignment2 Group 51
 
 This project is the Group 51 Social Media Analytics System
-Aoheng Ma (888788)
-Zhewei Wang (809689)
-Shuanghong Li(853682)
-Xinda Yu (816864)
+\nAoheng Ma (888788)
+\nZhewei Wang (809689)
+\nShuanghong Li(853682)
+\nXinda Yu (816864)
 
 ## Ansible
 This is the Ansible script file
