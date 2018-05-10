@@ -9,12 +9,15 @@
     git_frontend_path: ~/COMP90024_Assignment2/CCC2018-Frontend/ccc2frontend.war
     git_streamer_path: ~/COMP90024_Assignment2/CCC2018-Harvester/stream_tweets.py
     git_crawler_path: ~/COMP90024_Assignment2/CCC2018-Harvester/search_tweets.py
+    git_crawler_shell: ~/COMP90024_Assignment2/CCC2018-Harvester/crawl.sh
     tomcat_tar: "http://apache.melbourneitmirror.net/tomcat/tomcat-8/v8.5.31/bin/apache-tomcat-8.5.31.tar.gz"
     tomcat_fname: apache-tomcat-8.5.31.tar.gz
     tomcat_home: /opt/tomcat
     tomcat_bin: /opt/tomcat/bin
     tomcat_webapps: /opt/tomcat/webapps
     catalina_home: /opt/tomcat
+    search_json: "search.json"
+    stream_json: "stream.json"
   #remote username
   remote_user: ubuntu
   tasks:
@@ -24,8 +27,19 @@
       - default-jdk
       - git
       - couchdb
-      - python
+      - python3
+      - python3-pip
+
     become: yes
+
+  - name: install node
+    command: sudo apt-get install nodejs -y
+
+  # - name: install npm
+  #   command: sudo apt-get install npm -y
+
+  - name: install tweepy
+    command: sudo pip3 install tweepy
 
   - name: clone src code and deploy file from git
     command: git clone {{ git_repo }}
@@ -47,8 +61,8 @@
   - name: start the server
     command: sudo sh {{ tomcat_bin }}/startup.sh
 
-  # - name: start the crawler on the instance
-  #   command: python {{ git_streamer_path }}
+  - name: start the user crawler on the instance
+    shell: nohup python3 {{ git_streamer_path }} > {{ stream_json }} &
 
-  # - name: start the crawler on the instance
-  #   command: python {{ git_crawler_path }}
+  - name: start the user crawler on the instance
+    shell: nohup python3 {{ git_crawler_path }} {{ stream_json }} {{ search_json }} &
