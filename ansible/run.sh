@@ -1,3 +1,2 @@
 #!/bin/bash
-npm install
-ng serve
+ansible-playbook -i webservers --key-file cloud.key install.yml
