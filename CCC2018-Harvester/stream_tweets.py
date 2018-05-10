@@ -29,5 +29,5 @@ if __name__ == '__main__':
     stream = Stream(auth, l)
 
     #Filter Twitter Streams by specific polygon
-    geo = []
+    geo = [150.50, -34.10, 151.35, -33.55]
     stream.filter(locations=geo)
